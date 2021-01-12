@@ -68,7 +68,7 @@ export default function App() {
   if(loggedIn){
     return(
       <View>
-        <Text>USER LOGGED IN {firebase.auth().onAuthStateChanged((user) => {return user})}</Text>
+        <Text>USER LOGGED IN</Text>
       </View>
     )
   }
