@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import { View, TextInput, Image, Button } from 'react-native';
+import {useDispatch} from "react-redux"
+import {fetchUserPosts} from "../../redux/slice/user"
 
 import firebase from "firebase"
 import "firebase/firestore";
 import "firebase/firebase-storage";
 
 export default function Save({navigation, route}) {
-
+    const dispatch = useDispatch()
     const [caption, setCaption] = useState("");
 
     const uploadImage = async () => {
@@ -31,7 +33,6 @@ export default function Save({navigation, route}) {
         const taskCompleted = () => {
             task.snapshot.ref.getDownloadURL().then((snapshot)=>{
                 savePostData(snapshot);
-                console.log(snapshot);
             })
         }
 
@@ -53,6 +54,7 @@ export default function Save({navigation, route}) {
             creation: firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(()=>{
+            dispatch(fetchUserPosts())
             navigation.popToTop();
         })
     };

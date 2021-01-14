@@ -1,9 +1,9 @@
-import React, { Profiler, useEffect } from "react";
+import React, { useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
-import { fetchUser } from "../redux/slice/user";
+import { fetchUser, fetchUserPosts } from "../redux/slice/user";
 import Feed from "./main/Feed";
 import Profile from "./main/Profile";
 
@@ -15,13 +15,15 @@ const Empty = () => {
 
 export default function Main() {
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, posts } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (!currentUser) {
       dispatch(fetchUser());
+      dispatch(fetchUserPosts());
     }
-  }, []);
+    
+  }, [posts]);
 
   return (
     <Tab.Navigator initialRouteName="Feed" labeled={false}>
