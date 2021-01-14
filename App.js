@@ -8,9 +8,10 @@ import Landing from "./components/auth/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Main from "./components/Main";
+import Add from "./components/main/Add";
 
-import { configureStore} from "@reduxjs/toolkit";
-import {Provider} from "react-redux"
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
 import rootReducer from "./redux/index";
 
 // using toolkit we make it easier by toolkit configuring dev tools, thunk etc
@@ -26,7 +27,7 @@ const firebaseConfig = {
   storageBucket: "native-social-pic-app.appspot.com",
   messagingSenderId: "789105035726",
   appId: "1:789105035726:web:14fcb2f729e3b5a699839f",
-  measurementId: "G-90CGP0NVZS"
+  measurementId: "G-90CGP0NVZS",
 };
 
 if (firebase.apps.length === 0) {
@@ -81,7 +82,19 @@ export default function App() {
   if (loggedIn) {
     return (
       <Provider store={store}>
-        <Main />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Landing">
+            <Stack.Screen
+              name="Main"
+              component={Main}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Add"
+              component={Add}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
       </Provider>
     );
   }
