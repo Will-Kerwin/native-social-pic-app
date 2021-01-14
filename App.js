@@ -9,6 +9,7 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Main from "./components/Main";
 import Add from "./components/main/Add";
+import Save from "./components/main/Save";
 
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
@@ -92,6 +93,10 @@ export default function App() {
             <Stack.Screen
               name="Add"
               component={Add}
+            />
+            <Stack.Screen
+              name="Save"
+              component={Save}
             />
           </Stack.Navigator>
         </NavigationContainer>
