@@ -6,6 +6,9 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { fetchUser, fetchUserPosts } from "../redux/slice/user";
 import Feed from "./main/Feed";
 import Profile from "./main/Profile";
+import Search from "./main/Search";
+
+import firebase from "firebase";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -13,7 +16,7 @@ const Empty = () => {
   return(null)
 }
 
-export default function Main() {
+export default function Main(props) {
   const dispatch = useDispatch();
   const { currentUser, posts } = useSelector((state) => state.user);
 
@@ -37,6 +40,15 @@ export default function Main() {
         }}
       />
       <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="magnify" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="AddContainer"
         component={Empty}
         listeners={({ navigation }) => ({
@@ -54,6 +66,13 @@ export default function Main() {
       <Tab.Screen
         name="Profile"
         component={Profile}
+        navigation={props.navigation}
+        listeners={({navigation})=>({
+          tabPress: event => {
+            event.preventDefault();
+            navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid})
+          }
+        })}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
