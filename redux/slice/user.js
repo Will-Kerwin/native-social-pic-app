@@ -46,11 +46,35 @@ export const fetchUserPosts = createAsyncThunk(
   }
 );
 
+export const fetchUserFollowing = createAsyncThunk(
+  "user/fetchUserFollowing",
+  async () => {
+    const following = await firebase
+      .firestore()
+      .collection("following")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("userFollowing")
+      .get()
+      .then((snapshot) => {
+        const followers = snapshot.docs.map((doc) => {
+          const id = doc.id;
+          return id;
+        });
+        return followers;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return following;
+  }
+);
+
 const user = createSlice({
   name: "user",
   initialState: {
     currentUser: null,
     posts: [],
+    following:[]
   },
   extraReducers: {
     [fetchUser.fulfilled]: (state, action) => {
@@ -58,6 +82,9 @@ const user = createSlice({
     },
     [fetchUserPosts.fulfilled]: (state, action) => {
       state.posts = action.payload;
+    },
+    [fetchUserFollowing.fulfilled]: (state, action) => {
+      state.following = action.payload;
     },
   },
 });
