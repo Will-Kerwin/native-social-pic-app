@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import firebase from "firebase";
+import { fetchUsersData } from "./users";
 
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   const user = await firebase
@@ -48,7 +49,7 @@ export const fetchUserPosts = createAsyncThunk(
 
 export const fetchUserFollowing = createAsyncThunk(
   "user/fetchUserFollowing",
-  async () => {
+  async (_, api) => {
     const following = await firebase
       .firestore()
       .collection("following")
@@ -56,7 +57,7 @@ export const fetchUserFollowing = createAsyncThunk(
       .collection("userFollowing")
       .get()
       .then((snapshot) => {
-        const followers = snapshot.docs.map((doc) => {
+        let followers = snapshot.docs.map((doc) => {
           const id = doc.id;
           return id;
         });
@@ -65,9 +66,13 @@ export const fetchUserFollowing = createAsyncThunk(
       .catch((err) => {
         console.log(err);
       });
+      for (let i = 0; i < api.getState().user.following.length; i++) {
+        await api.dispatch(fetchUsersData(following[i]));
+      }
     return following;
   }
 );
+
 
 const user = createSlice({
   name: "user",
@@ -86,6 +91,7 @@ const user = createSlice({
     [fetchUserFollowing.fulfilled]: (state, action) => {
       state.following = action.payload;
     },
+  
   },
 });
 

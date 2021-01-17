@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { fetchUser, fetchUserFollowing, fetchUserPosts } from "../redux/slice/user";
+import {
+  fetchUser,
+  fetchUserFollowing,
+  fetchUserPosts,
+} from "../redux/slice/user";
 import Feed from "./main/Feed";
 import Profile from "./main/Profile";
 import Search from "./main/Search";
@@ -12,8 +16,8 @@ import firebase from "firebase";
 const Tab = createMaterialBottomTabNavigator();
 
 const Empty = () => {
-  return(null)
-}
+  return null;
+};
 
 export default function Main(props) {
   const dispatch = useDispatch();
@@ -24,8 +28,10 @@ export default function Main(props) {
       dispatch(fetchUser());
       dispatch(fetchUserPosts());
     }
-    dispatch(fetchUserFollowing())
-  }, [posts, currentUser, following]);
+    dispatch(fetchUserFollowing());
+
+    
+  }, [posts, currentUser]);
 
   return (
     <Tab.Navigator initialRouteName="Feed" labeled={false}>
@@ -51,10 +57,10 @@ export default function Main(props) {
         name="AddContainer"
         component={Empty}
         listeners={({ navigation }) => ({
-          tabPress:event => {
+          tabPress: (event) => {
             event.preventDefault();
-            navigation.navigate("Add")
-          }
+            navigation.navigate("Add");
+          },
         })}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -66,11 +72,13 @@ export default function Main(props) {
         name="Profile"
         component={Profile}
         navigation={props.navigation}
-        listeners={({navigation})=>({
-          tabPress: event => {
+        listeners={({ navigation }) => ({
+          tabPress: (event) => {
             event.preventDefault();
-            navigation.navigate("Profile", {uid: firebase.auth().currentUser.uid})
-          }
+            navigation.navigate("Profile", {
+              uid: firebase.auth().currentUser.uid,
+            });
+          },
         })}
         options={{
           tabBarIcon: ({ color, size }) => (
